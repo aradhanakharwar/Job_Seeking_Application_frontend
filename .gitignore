@@ -25,6 +25,3 @@ dist-ssr
 
 # Ignore environment variables
 .env
-
-# Ignore config directory
-/config
