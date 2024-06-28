@@ -7,7 +7,7 @@ import { FaPhoneFlip } from 'react-icons/fa6';
 import { RiLock2Fill } from 'react-icons/ri';
 import { Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
-
+import Cookies from 'js-cookie';
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +24,7 @@ const Login = () => {
           "Content-Type": "application/json"
         }
       });
+      Cookies.set('token', data.token, { expires: 5 });
       toast.success(data.message);
       setEmail("");
       setPassword("");
