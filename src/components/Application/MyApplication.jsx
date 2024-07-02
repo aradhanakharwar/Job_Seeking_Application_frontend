@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import ResumeModal from '../Application/ResumeModal';
-import Cookies from 'js-cookie';
 const MyApplication = () => {
   const { isAuthorized, user } = useContext(Context);
   const [applications, setApplications] = useState([]);
@@ -16,7 +15,7 @@ const MyApplication = () => {
   useEffect(() => {
     console.log(import.meta.env.VITE_BACKEND_URL);
     try {
-      const token = Cookies.get('token'); // Replace 'token' with the name of your cookie
+      const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
       // Configure the request headers to include the token
       const config = {
         headers: {

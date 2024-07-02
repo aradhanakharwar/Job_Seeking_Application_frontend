@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Context } from '../../main';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 const JobDetails = () => {
   const { id } = useParams();
   const [job, setJob] = useState({});
@@ -11,7 +10,7 @@ const JobDetails = () => {
   const { isAuthorized, user } = useContext(Context);
 
   useEffect(() => {
-    const token = Cookies.get('token'); // Replace 'token' with the name of your cookie
+    const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
     // Configure the request headers to include the token
     const config = {
       headers: {

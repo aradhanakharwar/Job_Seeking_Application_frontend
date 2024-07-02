@@ -5,7 +5,6 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa';
 import { RxCross2 } from 'react-icons/rx';
-import Cookies from 'js-cookie';
 const MyJobs = () => {
   const [myJobs, setMyJobs] = useState([]);
   const [editingMode, setEditingMode] = useState(null);
@@ -17,7 +16,7 @@ const MyJobs = () => {
     console.log(myJobs);
     const fetchJobs = async () => {
       try {
-        const token = Cookies.get('token'); // Replace 'token' with the name of your cookie
+        const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
         // Configure the request headers to include the token
         const config = {
           headers: {

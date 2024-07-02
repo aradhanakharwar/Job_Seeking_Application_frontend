@@ -17,7 +17,6 @@ import NotFound from './components/NotFound/NotFound';
 import JobDetails from './components/Job/JobDetails';
 import { Toaster } from 'react-hot-toast';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 const App = () => {
 
   const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
@@ -26,7 +25,7 @@ const App = () => {
     const fetchUser = async () => {
       try {
         // Retrieve the token from cookie storage
-        const token = Cookies.get('token'); // Replace 'token' with the name of your cookie
+        const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
         // Configure the request headers to include the token
         const config = {
           headers: {
@@ -34,7 +33,7 @@ const App = () => {
           },
           withCredentials: true,
         };
-        console.log('config', config);
+
         // Make the request with the configured headers
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/user/getuser`, config);
 
