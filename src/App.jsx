@@ -27,7 +27,6 @@ const App = () => {
       try {
         // Retrieve the token from cookie storage
         const token = Cookies.get('token'); // Replace 'token' with the name of your cookie
-        console.log('token', token);
         // Configure the request headers to include the token
         const config = {
           headers: {

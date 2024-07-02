@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Context } from '../../main';
 import axios from 'axios';
-
+import Cookies from 'js-cookie';
 const JobDetails = () => {
   const { id } = useParams();
   const [job, setJob] = useState({});
@@ -11,7 +11,15 @@ const JobDetails = () => {
   const { isAuthorized, user } = useContext(Context);
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}api/job/getsinglejob/${id}`, { withCredentials: true })
+    const token = Cookies.get('token'); // Replace 'token' with the name of your cookie
+    // Configure the request headers to include the token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    };
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}api/job/getsinglejob/${id}`, config)
       .then((res) => {
         setJob(res.data.job);
       }).catch((err) => {

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import ResumeModal from '../Application/ResumeModal';
-
+import Cookies from 'js-cookie';
 const MyApplication = () => {
   const { isAuthorized, user } = useContext(Context);
   const [applications, setApplications] = useState([]);
@@ -14,15 +14,23 @@ const MyApplication = () => {
   const navigateTo = useNavigate();
 
   useEffect(() => {
-    console.log(import.meta.env.VITE_BACKEND_URL); 
+    console.log(import.meta.env.VITE_BACKEND_URL);
     try {
+      const token = Cookies.get('token'); // Replace 'token' with the name of your cookie
+      // Configure the request headers to include the token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      };
       if (user && user.role === "Employer") {
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}api/application/employer/getall`, { withCredentials: true })
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}api/application/employer/getall`, config)
           .then((res) => {
             setApplications(res.data.applications)
           });
       } else {
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}api/application/jobseeker/getall`, { withCredentials: true })
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}api/application/jobseeker/getall`, config)
           .then((res) => {
             setApplications(res.data.applications)
           });
