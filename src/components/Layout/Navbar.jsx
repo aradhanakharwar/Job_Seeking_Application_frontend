@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../../main';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-
 const Navbar = () => {
   const [show, setShow] = useState(false);
   const { isAuthorized, setIsAuthorized, user } = useContext(Context);
@@ -12,7 +11,15 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/user/logout`, { withCredentials: true })
+      const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
+      // Configure the request headers to include the token
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      };
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/user/logout`, config)
       toast.success(response.data.message);
       setIsAuthorized(false);
       navigateTo("/login");

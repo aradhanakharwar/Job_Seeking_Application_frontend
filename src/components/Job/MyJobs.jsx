@@ -5,7 +5,6 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa';
 import { RxCross2 } from 'react-icons/rx';
-
 const MyJobs = () => {
   const [myJobs, setMyJobs] = useState([]);
   const [editingMode, setEditingMode] = useState(null);
@@ -17,7 +16,15 @@ const MyJobs = () => {
     console.log(myJobs);
     const fetchJobs = async () => {
       try {
-        const { data } = await axios.get("http://localhost:4000/api/job/getmyjobs", { withCredentials: true });
+        const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
+        // Configure the request headers to include the token
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        };
+        const { data } = await axios.get("http://localhost:4000/api/job/getmyjobs", config);
         setMyJobs(data.myJobs);
         console.log(data);
       } catch (error) {
