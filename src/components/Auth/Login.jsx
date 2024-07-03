@@ -24,6 +24,8 @@ const Login = () => {
           "Content-Type": "application/json"
         }
       });
+      console.log(data);
+      localStorage.setItem("token", data.token)
       toast.success(data.message);
       setEmail("");
       setPassword("");

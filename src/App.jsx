@@ -17,7 +17,6 @@ import NotFound from './components/NotFound/NotFound';
 import JobDetails from './components/Job/JobDetails';
 import { Toaster } from 'react-hot-toast';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const App = () => {
 
@@ -26,15 +25,21 @@ const App = () => {
   useEffect(() => {
     console.log(isAuthorized);
     console.log(user);
-    const token = Cookies.get('token');
-    console.log(token);
+    const token = localStorage.getItem('token');
+    console.log("token---------------------",token);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      withCredentials: true
+    }
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/user/getuser`, { withCredentials: true });
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/user/getuser`, config );
+        console.log("response--------------------------",response);
         setUser(response.data.user);
         setIsAuthorized(true);
       } catch (error) {
-        console.log(error);
         setIsAuthorized(false);
       };
     };
