@@ -15,7 +15,7 @@ const PostJobs = () => {
   const [salaryTo, setSalaryTo] = useState("");
   const [fixedSalary, setFixedSalary] = useState("");
   const [salaryType, setSalaryType] = useState("default");
-  
+
   const navigateTo = useNavigate();
   const { isAuthorized, user } = useContext(Context);
 
@@ -33,9 +33,18 @@ const PostJobs = () => {
       setSalaryTo("");
       setFixedSalary("");
     };
-    await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/job/post`, fixedSalary.length >= 4 ? ({ title, category, country, city, location, fixedSalary, description }) : ({ title, category, country, city, location, salaryFrom, salaryTo, description }), {
-      withCredentials: true, headers: { "Content-Type": "application/json" }
-    })
+    const token = localStorage.getItem("token");
+    console.log(token);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        withCredentials: true
+      },
+    }
+    await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/job/post`, fixedSalary.length >= 4 ? ({ title, category, country, city, location, fixedSalary, description }) : ({ title, category, country, city, location, salaryFrom, salaryTo, description }),
+      config
+    )
       .then((res) => {
         toast.success(res.data.message)
       }).catch((err) => {

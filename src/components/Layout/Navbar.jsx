@@ -20,6 +20,7 @@ const Navbar = () => {
         withCredentials: true,
       };
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/user/logout`, config)
+      localStorage.removeItem("token");
       toast.success(response.data.message);
       setIsAuthorized(false);
       navigateTo("/login");
