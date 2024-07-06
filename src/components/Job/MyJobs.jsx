@@ -24,7 +24,7 @@ const MyJobs = () => {
           },
           withCredentials: true,
         };
-        const { data } = await axios.get("http://localhost:4000/api/job/getmyjobs", config);
+        const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/job/getmyjobs`, config);
         setMyJobs(data.myJobs);
         console.log(data);
       } catch (error) {
@@ -60,7 +60,7 @@ const MyJobs = () => {
         withCredentials: true
       },
     }
-    await axios.put(`http://localhost:4000/api/job/update/${jobId}`, updateJob, config)
+    await axios.put(`${import.meta.env.VITE_BACKEND_URL}api/job/update/${jobId}`, updateJob, config)
       .then((res) => {
         toast.success(res.data.message);
         setEditingMode(null);
