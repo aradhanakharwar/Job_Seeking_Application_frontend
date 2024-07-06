@@ -73,7 +73,13 @@ const MyJobs = () => {
 
 
   const handleDeleteJob = async (jobId) => {
-    await axios.delete(`${import.meta.env.VITE_BACKEND_URL}api/job/delete/${jobId}`, { withCredentials: true })
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: true
+      },
+    }
+    await axios.delete(`${import.meta.env.VITE_BACKEND_URL}api/job/delete/${jobId}`, config)
       .then((res) => {
         toast.success(res.data.message);
         setMyJobs(prevJobs => prevJobs.filter(job => job._id !== jobId));
