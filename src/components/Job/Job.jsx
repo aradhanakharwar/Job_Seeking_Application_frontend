@@ -7,12 +7,17 @@ const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const { isAuthorized } = useContext(Context);
   const navigateTo = useNavigate();
+  const token = localStorage.getItem("token");
   useEffect(() => {
     try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          withCredentials: true
+        },
+      }
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}api/job/getall`, {
-          withCredentials: true,
-        })
+        .get(`${import.meta.env.VITE_BACKEND_URL}api/job/getall`, config)
         .then((res) => {
           setJobs(res.data);
         });

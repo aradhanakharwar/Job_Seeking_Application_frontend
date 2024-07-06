@@ -9,8 +9,8 @@ const JobDetails = () => {
 
   const { isAuthorized, user } = useContext(Context);
 
+  const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
     // Configure the request headers to include the token
     const config = {
       headers: {

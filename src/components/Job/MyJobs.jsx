@@ -50,9 +50,17 @@ const MyJobs = () => {
     setEditingMode(jobId);
   };
 
+  const token = localStorage.getItem("token");
+
   const handleUpdateJob = async (jobId) => {
     const updateJob = myJobs.find(job => job._id === jobId);
-    await axios.put(`http://localhost:4000/api/job/update/${jobId}`, updateJob, { withCredentials: true })
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        withCredentials: true
+      },
+    }
+    await axios.put(`http://localhost:4000/api/job/update/${jobId}`, updateJob, config)
       .then((res) => {
         toast.success(res.data.message);
         setEditingMode(null);
