@@ -4,13 +4,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../../main';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 const Navbar = () => {
   const [show, setShow] = useState(false);
   const { isAuthorized, setIsAuthorized, user } = useContext(Context);
+  const [loader, setLoader] = useState(false);
   const navigateTo = useNavigate();
 
   const handleLogout = async () => {
     try {
+      setLoader(true);
       const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
       // Configure the request headers to include the token
       const config = {
@@ -19,12 +22,14 @@ const Navbar = () => {
         },
         withCredentials: true,
       };
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/user/logout`, config)
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/user/logout`, config);
+      setLoader(false);
       localStorage.removeItem("token");
       toast.success(response.data.message);
       setIsAuthorized(false);
       navigateTo("/login");
     } catch (error) {
+      setLoader(false);
       toast.error(error.response.data.message);
       setIsAuthorized(true);
     };
@@ -73,7 +78,7 @@ const Navbar = () => {
                 <></>
               )
             }
-            <button onClick={handleLogout}>LOGOUT</button>
+            <button onClick={handleLogout}>{loader ? <ClipLoader size={22} /> : "LOGOUT"}</button>
           </ul>
           <div className="hamburger">
             <GiHamburgerMenu onClick={() => setShow(!show)} />

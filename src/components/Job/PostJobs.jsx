@@ -3,6 +3,7 @@ import { Context } from '../../main';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 
 const PostJobs = () => {
   const [title, setTitle] = useState("");
@@ -15,6 +16,7 @@ const PostJobs = () => {
   const [salaryTo, setSalaryTo] = useState("");
   const [fixedSalary, setFixedSalary] = useState("");
   const [salaryType, setSalaryType] = useState("default");
+  const [loader, setLoader] = useState(false);
 
   const navigateTo = useNavigate();
   const { isAuthorized, user } = useContext(Context);
@@ -22,6 +24,8 @@ const PostJobs = () => {
 
   const handleJobPost = async (e) => {
     e.preventDefault();
+
+    setLoader(true);
 
     if (salaryType === "Fixed Salary") {
       setSalaryFrom("");
@@ -34,7 +38,6 @@ const PostJobs = () => {
       setFixedSalary("");
     };
     const token = localStorage.getItem("token");
-    console.log(token);
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,8 +49,10 @@ const PostJobs = () => {
       config
     )
       .then((res) => {
+        setLoader(false);
         toast.success(res.data.message)
       }).catch((err) => {
+        setLoader(false);
         console.log(err);
         toast.error(err.response.data.message)
       })
@@ -162,7 +167,10 @@ const PostJobs = () => {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Job Description"
             />
-            <button type="submit">Create Job</button>
+            <button type="submit">{loader ? <ClipLoader
+              color="white"
+              size={22}
+            /> : "Create Job"}</button>
           </form>
         </div>
       </div>

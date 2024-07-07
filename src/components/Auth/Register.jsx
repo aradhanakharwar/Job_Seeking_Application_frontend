@@ -7,6 +7,7 @@ import { FaPhoneFlip } from 'react-icons/fa6';
 import { RiLock2Fill } from 'react-icons/ri';
 import { Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -14,18 +15,21 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
+  const [loader, setLoader] = useState(false);
 
   const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
+      setLoader(true);
       const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}api/user/register`, { name, email, password, phone, role }, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json"
         }
       });
+      setLoader(false);
       toast.success(data.message);
       setName("");
       setEmail("");
@@ -34,6 +38,7 @@ const Register = () => {
       setRole("");
       setIsAuthorized(true);
     } catch (error) {
+      setLoader(false);
       console.log(error);
       toast.error(error.response?.data?.message)
     };
@@ -91,7 +96,8 @@ const Register = () => {
                 <RiLock2Fill />
               </div>
             </div>
-            <button onClick={handleRegister} type="submit">Register</button>
+            <button onClick={handleRegister} type="submit">{loader ? <ClipLoader color="white"
+              size={22} /> : "Register"}</button>
             <Link to={'/login'}>Login now</Link>
           </form>
         </div>

@@ -5,17 +5,21 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaCheck } from 'react-icons/fa';
 import { RxCross2 } from 'react-icons/rx';
+import { ClipLoader } from 'react-spinners';
 const MyJobs = () => {
   const [myJobs, setMyJobs] = useState([]);
   const [editingMode, setEditingMode] = useState(null);
   const { isAuthorized, user } = useContext(Context);
+  const [loader, setLoader] = useState(false);
+  const [loaderEdit, setLoaderEdit] = useState(false);
+  const [loaderDelete, setLoaderDelete] = useState(false);
 
   const navigateTo = useNavigate();
 
   useEffect(() => {
-    console.log(myJobs);
     const fetchJobs = async () => {
       try {
+        setLoader(true);
         const token = localStorage.getItem('token'); // Replace 'token' with the name of your cookie
         // Configure the request headers to include the token
         const config = {
@@ -26,9 +30,10 @@ const MyJobs = () => {
         };
         const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/job/getmyjobs`, config);
         setMyJobs(data.myJobs);
-        console.log(data);
+        setLoader(false);
       } catch (error) {
         console.log(error);
+        setLoader(false);
         toast.error(error?.response?.data.message);
         setMyJobs([]);
       };
@@ -53,6 +58,7 @@ const MyJobs = () => {
   const token = localStorage.getItem("token");
 
   const handleUpdateJob = async (jobId) => {
+    setLoaderEdit(true);
     const updateJob = myJobs.find(job => job._id === jobId);
     const config = {
       headers: {
@@ -62,17 +68,20 @@ const MyJobs = () => {
     }
     await axios.put(`${import.meta.env.VITE_BACKEND_URL}api/job/update/${jobId}`, updateJob, config)
       .then((res) => {
+        setLoaderEdit(false);
         toast.success(res.data.message);
         setEditingMode(null);
         fetchJobs();
       })
       .catch((error) => {
+        setLoaderEdit(false);
         toast.error(error.response.data.message);
       });
   };
 
 
   const handleDeleteJob = async (jobId) => {
+    setLoaderDelete(true);
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -81,11 +90,13 @@ const MyJobs = () => {
     }
     await axios.delete(`${import.meta.env.VITE_BACKEND_URL}api/job/delete/${jobId}`, config)
       .then((res) => {
+        setLoaderDelete(false);
         toast.success(res.data.message);
         setMyJobs(prevJobs => prevJobs.filter(job => job._id !== jobId));
         fetchJobs();
       })
       .catch((error) => {
+        setLoaderDelete(false);
         toast.error(error.response.data.message);
       });
   };
@@ -103,7 +114,7 @@ const MyJobs = () => {
       <div className="myJobs page">
         <div className="container">
           <h3>Your Posted Jobs</h3>
-          {
+          {loader ? <ClipLoader /> : (
             myJobs && myJobs.length > 0 ?
               <>
                 <div className="banner">
@@ -199,7 +210,8 @@ const MyJobs = () => {
                             {
                               editingMode === element._id ? (
                                 <>
-                                  <button onClick={() => handleUpdateJob(element._id)} className='check_btn'><FaCheck />
+                                  <button onClick={() => handleUpdateJob(element._id)} className='check_btn'> {loaderEdit ? <ClipLoader color="white"
+                                    size={20} /> : <FaCheck />}
                                   </button>
                                   <button onClick={() => handleDisableEdit()} className='cross_btn'><RxCross2 />
                                   </button>
@@ -212,7 +224,8 @@ const MyJobs = () => {
                             }
                           </div>
                           <button onClick={() => handleDeleteJob(element._id)} className='delete_btn'>
-                            Delete
+                            {loaderDelete ? <ClipLoader color="white"
+                              size={20} /> : "Delete"}
                           </button>
                         </div>
                       </div>
@@ -222,6 +235,7 @@ const MyJobs = () => {
               </>
               :
               <p>You've not posted any job or may be you deleted all of your jobs!</p>
+          )
           }
         </div>
       </div>

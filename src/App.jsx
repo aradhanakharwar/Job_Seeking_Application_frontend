@@ -23,10 +23,7 @@ const App = () => {
   const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
 
   useEffect(() => {
-    console.log(isAuthorized);
-    console.log(user);
     const token = localStorage.getItem('token');
-    console.log("token---------------------",token);
     const config = {
       headers: {
         Authorization: `Bearer ${token}`
@@ -36,7 +33,6 @@ const App = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}api/user/getuser`, config );
-        console.log("response--------------------------",response);
         setUser(response.data.user);
         setIsAuthorized(true);
       } catch (error) {
